@@ -22,15 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */}
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export function Button() {
-    const [counter, setCounter] = useState(0);
+    const [counter, setCounter] = useState(() => {
+        const localValue = localStorage.getItem("COUNTER");
+
+        if (localValue == null)
+            return 0;
+
+        return JSON.parse(localValue);
+    });
+
+    // The useEffect() function is applied after the component is rendered
+    
+    useEffect(() => {
+        localStorage.setItem("COUNTER", JSON.stringify(counter))
+    }, [counter]);
 
     return (
         <div>
             <button onClick={() => setCounter(counter + 1)}>
                 Click me!
+            </button>
+            <button onClick={() => setCounter(0)}>
+                Reset
             </button>
             <p>You clicked the button {counter} times</p>
         </div>
